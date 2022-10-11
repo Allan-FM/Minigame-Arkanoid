@@ -1,16 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Base : MonoBehaviour
 {
     [SerializeField] private float speed = 5f;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
+    [SerializeField] private float impulseForce = 0.5f;
 
     // Update is called once per frame
     void Update()
@@ -27,6 +20,31 @@ public class Base : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
         {
             transform.position += Vector3.right * speed * Time.deltaTime;
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Ball"))
+        {
+            var rbBall = GetComponent<Rigidbody2D>();
+            if (rbBall != null)
+            {
+                rbBall.AddForce(Vector2.up * impulseForce, ForceMode2D.Impulse);
+            }
+            if (other.gameObject.transform.position.x > 0)
+            {
+                if (rbBall != null)
+                {
+                    rbBall.AddForce(Vector2.right * impulseForce, ForceMode2D.Impulse);
+                }
+            }
+            if (other.gameObject.transform.position.x >= 0)
+            {
+                if (rbBall != null)
+                {
+                    rbBall.AddForce(Vector2.left * impulseForce, ForceMode2D.Impulse);
+                }
+            }
         }
     }
 }
